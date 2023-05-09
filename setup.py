@@ -1,13 +1,8 @@
-from os import getenv
-from dotenv import load_dotenv
 from canvasapi import Canvas, exceptions
-from replit import db
+
 
 # current term id
 TERM_ID = 233
-
-# load .env
-load_dotenv()
 
 # user class
 class Student:
