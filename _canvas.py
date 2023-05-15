@@ -72,7 +72,6 @@ def printAssignments(user, courseCode, dateRange, dated):
     assignments["hws_no_due"] = []
     if len(assignments["hws"]) == 0:
       return None
-    
 
   returnList = [
     f"---------\n**Course: {assignments['course'].course_code} **",
@@ -83,17 +82,14 @@ def printAssignments(user, courseCode, dateRange, dated):
       f"**{hw.name}**", f"Due: {getReadableDate(hw.due_at)}",
       f"Lock: {getReadableDate(hw.lock_at)}", f"Link: {hw.html_url}\n"
     ]
-    for s in hwString:
-      returnList.append(s)
+    returnList.append("\n".join(hwString))
 
   for hw in assignments["hws_no_due"]:
-    hwString = [
-      f"**{hw.name}**", "Due: Undated", f"Link: {hw.html_url}\n"
-    ]
-    for s in hwString:
-      returnList.append(s)
+    hwString = [f"**{hw.name}**", "Due: Undated", f"Link: {hw.html_url}\n"]
+    returnList.append("\n".join(hwString))
 
-  return "\n".join(returnList)
+  return returnList
+
 
 def getAssignmentDetailed(user, courseCode, hw):
   try:
@@ -119,9 +115,11 @@ def getAssignmentDetailed(user, courseCode, hw):
         if result == "":
           result = "No description."
 
-        return "\n".join([
+        return [
           f"**{_hw.name}**", f"Link: {_hw.html_url}",
-          f"Course: {hws['course'].course_code}", f"Submission types: {', '.join(_hw.submission_types)}", f"Description: {result}"
-        ])
+          f"Course: {hws['course'].course_code}",
+          f"Submission types: {', '.join(_hw.submission_types)}",
+          f"Description: {result}"
+        ]
 
   return "Assignment not found :("

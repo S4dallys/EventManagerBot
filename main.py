@@ -1,4 +1,5 @@
 import discord
+import random
 from discord.ext import commands
 from keep_alive import keep_alive
 from ppsize import ppsize
@@ -78,11 +79,12 @@ async def hws(ctx, course, date, dated=None):
   result = _canvas.printAssignments(user, course, date, dated)
 
   if result == 0:
-    result = "Failed. Course not found."
+    result = ["Failed. Course not found."]
   elif result == None:
-    result = "No assignments found. Yay!"
+    result = ["No assignments found. Yay!"]
 
-  await ctx.send(result)
+  for e in result:
+    await ctx.send(e)
 
 @hws.error
 async def hws_error(ctx, error):
@@ -105,7 +107,8 @@ async def hwsall(ctx, date, dated=None):
     result = _canvas.printAssignments(user, course.name[:12], date, dated)
     if result != 0 and result != None:
       exists = True
-      await ctx.send(result)
+      for e in result:
+        await ctx.send(e)
 
   if exists == False:
     await ctx.send("No assignments found. Gladge!")
@@ -125,7 +128,9 @@ async def hwdet(ctx, course, name):
     return
 
   result = _canvas.getAssignmentDetailed(user, course, name)
-  await ctx.send(result)
+
+  for e in result:
+    await ctx.send(e)
 
 @hwdet.error
 async def hwdet_error(ctx, error):
@@ -133,6 +138,12 @@ async def hwdet_error(ctx, error):
     await ctx.send(
       "Please write the command like so: *!!hwdet <course> <keyword>*\n(ex. !!hwdet dsalg midterm = dsalg assignment with name closest to 'midterm')"
     )
+
+@bot.command()
+async def pick(ctx, *args):
+  rand = random.randint(0, len(args) - 1)
+  await ctx.send(args[rand])
+  
 
     
 
@@ -150,6 +161,7 @@ async def com(ctx):
     "!!fact",
     "!!pp <@user>",
     "!!stan <@user",
+    "!!pick <item> <item> ...",
     "!!token <token>",
     "!!hws <course> <range> -U (optional)",
     "!!hwsall <range> -U (optional)",
